@@ -1,1 +1,1 @@
-# Events API
+# Event Booking API

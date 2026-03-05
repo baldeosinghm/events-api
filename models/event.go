@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"example.com/rest-api/db"
+	"example.com/event-booking-api/db"
 )
 
 // File is responsbile for backend logic related to event(s)

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"example.com/rest-api/models"
+	"example.com/event-booking-api/models"
 	"github.com/gin-gonic/gin"
 )
 

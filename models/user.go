@@ -3,8 +3,8 @@ package models
 import (
 	"errors"
 
-	"example.com/rest-api/db"
-	"example.com/rest-api/utils"
+	"example.com/event-booking-api/db"
+	"example.com/event-booking-api/utils"
 )
 
 type User struct {

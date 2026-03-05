@@ -57,9 +57,10 @@ func createEvent(context *gin.Context) {
 		return
 	}
 
-	// Create temporary dummy IDs
-	event.ID = 1
-	event.UserID = 1
+	// Retrieve user Id from gin context; call this specific function
+	// b/c it gives us the correct type for the event struct
+	userId := context.GetInt64("userId")
+	event.UserID = userId
 
 	err = event.Save()
 
@@ -89,13 +90,21 @@ func updateEvent(context *gin.Context) {
 	}
 
 	// Look up id in db to see if it exists
-	_, err = models.GetEventById(eventID)
+	userId := context.GetInt64("userId")
+	event, err := models.GetEventById(eventID)
 
 	if err != nil {
 		context.JSON(
 			http.StatusInternalServerError,
 			gin.H{"message": "Could not fetch the event."},
 		)
+		return
+	}
+
+	// Check if the user ID attached to the event matches the user ID we
+	// pulled from this login token
+	if event.UserID != userId {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized to update event."})
 		return
 	}
 
@@ -135,6 +144,7 @@ func deleteEvent(context *gin.Context) {
 		return
 	}
 
+	userId := context.GetInt64("userId")
 	// Look up id in db to see if it exists
 	event, err := models.GetEventById(eventID)
 
@@ -143,6 +153,13 @@ func deleteEvent(context *gin.Context) {
 			http.StatusInternalServerError,
 			gin.H{"message": "Could not fetch the event."},
 		)
+		return
+	}
+
+	// Check if the user ID attached to the event matches the user ID we
+	// pulled from this login token
+	if event.UserID != userId {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized to delete event."})
 		return
 	}
 
